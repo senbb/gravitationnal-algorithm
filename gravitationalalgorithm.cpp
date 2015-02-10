@@ -2,6 +2,76 @@
 
 using namespace std;
 
+Problem::Problem():_dimension(30),LowerLimit(0),UpperLimit(0)
+{
+}
+
+Problem::~Problem()
+{
+}
+
+Problem& Problem::operator = (const Problem& pbm)
+{
+    if(this != &pbm)
+    {
+        _dimension = pbm._dimension;
+        LowerLimit = pbm.LowerLimit;
+        UpperLimit = pbm.UpperLimit;
+    }
+
+    return *this;
+}
+
+bool Problem::operator ==(const Problem& pbm) const
+{
+    return (_dimension==pbm._dimension)&&(UpperLimit==pbm.UpperLimit)&&(LowerLimit==pbm.LowerLimit);
+}
+
+bool Problem::operator !=(const Problem& pbm) const
+{
+    return !((_dimension==pbm._dimension)&&(UpperLimit==pbm.UpperLimit)&&(LowerLimit==pbm.LowerLimit));
+}
+
+int Problem::dimension() const
+{
+    return _dimension;
+}
+
+ostream& operator << (ostream& os, const Problem& pbm)
+{
+    return os << pbm._dimension << "," << pbm.LowerLimit << "," << pbm.UpperLimit;
+}
+
+istream& operator >> (istream& is, Problem& pbm)
+{
+
+    istream_iterator<string> it(is),end;
+    pbm._dimension = string2Value<int>(*it);
+    it++;
+    it++;
+    pbm.LowerLimit = string2Value<double>(*it);
+    it++;
+    it++;
+    pbm.UpperLimit = string2Value<double>(*it);
+
+    return is;
+}
+
+
+void MyAlgorithm::evaluate()
+{
+    _fitness_values.erase(_fitness_values.begin(), _fitness_values.end());
+    int i = 0;
+
+    for(Solution* solution : _solutions)
+    {
+        struct particle tmp;
+        tmp.fitness = solution->get_fitness();
+        tmp.index = i;
+        i++;
+    }
+}
+
 MyAlgorithm::MyAlgorithm(const Problem &pbm, const SetUpParams &setup):
     _solutions(), _fitness_values(), _setup(setup), _upper_cost(), _lower_cost()
 {
@@ -101,7 +171,7 @@ Solution& MyAlgorithm::worst_solution() const
     for(Solution sol: _solutions)
     {
         if(sol>worstSolution)
-            bestSolution=sol;
+            worstSolution=sol;
     }
 
     return sol;
