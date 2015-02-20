@@ -12,6 +12,10 @@ struct particle // index of a particle in the swarm and its fitness
 {
     int index;
     double fitness;
+    double a;
+    double velocity;
+    double distance;
+    double masse;
 };
 
 //=======================================================================
@@ -27,6 +31,7 @@ public:
     Problem& operator=  (const Problem& pbm);
     bool operator== (const Problem& pbm) const;
     bool operator!= (const Problem& pbm) const;
+    virtual double evaluate(vector<double>) const=0;
 
     //Direction direction () const; //Maximize or Minimize
     int dimension() const;
